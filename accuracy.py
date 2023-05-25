@@ -1,35 +1,32 @@
-#from post_processing import *
+# from post_processing import *
+
 import numpy as np
 from PIL import Image
-import glob as gl
-import numpy as np
-from PIL import Image
-import torch
 
 
 def accuracy_check(mask, prediction):
     ims = [mask, prediction]
     np_ims = []
     for item in ims:
-        if 'str' in str(type(item)):
+        if "str" in str(type(item)):
             item = np.array(Image.open(item))
-        elif 'PIL' in str(type(item)):
+        elif "PIL" in str(type(item)):
             item = np.array(item)
-        elif 'torch' in str(type(item)):
+        elif "torch" in str(type(item)):
             item = item.numpy()
         np_ims.append(item)
 
     compare = np.equal(np_ims[0], np_ims[1])
     accuracy = np.sum(compare)
 
-    return accuracy/len(np_ims[0].flatten())
+    return accuracy / len(np_ims[0].flatten())
 
 
 def accuracy_check_for_batch(masks, predictions, batch_size):
     total_acc = 0
     for index in range(batch_size):
         total_acc += accuracy_check(masks[index], predictions[index])
-    return total_acc/batch_size
+    return total_acc / batch_size
 
 
 """
@@ -72,11 +69,11 @@ def accuracy_compare(prediction_folder, true_mask_folder):
 """
 
 # Experimenting
-if __name__ == '__main__':
-    '''
+if __name__ == "__main__":
+    """
     predictions = 'result/*.png'
     masks = '../data/val/masks/*.png'
     result = accuracy_compare(predictions, masks)
     print('Original Result :', result[0])
     print('Postprocess result :', result[1])
-    '''
+    """

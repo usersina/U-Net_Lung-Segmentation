@@ -1,29 +1,37 @@
-import torchvision.transforms as transforms
 import random
-import torch.nn.functional as F
+
 import numpy as np
-#transforms = {Resize, ToTensor, RandomCrop, ToPILImage}
+import torch.nn.functional as F
+import torchvision.transforms as transforms
+
+# transforms = {Resize, ToTensor, RandomCrop, ToPILImage}
+
 
 class GrayScale(object):
-    def __call__(self,sample):
+    def __call__(self, sample):
         from torchvision.transforms import Grayscale
+
         Grayscale = Grayscale()
-        sample['image'] = Grayscale(sample['image'])
+        sample["image"] = Grayscale(sample["image"])
         return sample
+
 
 class Resize(object):
     """
     Resize the input PIL Image to the given size.
     """
-    def __init__(self,img_size):
-        assert isinstance(img_size , (int,tuple))
+
+    def __init__(self, img_size):
+        assert isinstance(img_size, (int, tuple))
         self.img_size = img_size
 
-    def __call__(self,sample):
-        img , mask = sample['image'],sample['mask']
-        Resize = transforms.Resize((self.img_size,self.img_size))
-        sample['image'],sample['mask'] = Resize(img), Resize(mask)
+    def __call__(self, sample):
+        img, mask = sample["image"], sample["mask"]
+        Resize = transforms.Resize((self.img_size, self.img_size))
+        sample["image"], sample["mask"] = Resize(img), Resize(mask)
         return sample
+
+
 class RandomRotation(object):
     """Rotate the image by angle.
 
@@ -88,17 +96,17 @@ class RandomRotation(object):
         return F.rotate(img, angle, self.resample, self.expand, self.center, self.fill)
 
     def __repr__(self):
-        format_string = self.__class__.__name__ + '(degrees={0}'.format(self.degrees)
-        format_string += ', resample={0}'.format(self.resample)
-        format_string += ', expand={0}'.format(self.expand)
+        format_string = self.__class__.__name__ + "(degrees={0}".format(self.degrees)
+        format_string += ", resample={0}".format(self.resample)
+        format_string += ", expand={0}".format(self.expand)
         if self.center is not None:
-            format_string += ', center={0}'.format(self.center)
-        format_string += ')'
+            format_string += ", center={0}".format(self.center)
+        format_string += ")"
         return format_string
 
 
 class ColorJitter(object):
-    def __init__(self,brightness=0, contrast=0, saturation=0, hue=0):
+    def __init__(self, brightness=0, contrast=0, saturation=0, hue=0):
         """
 
         :param brightness:
@@ -107,12 +115,11 @@ class ColorJitter(object):
         :param hue:
         """
         from torchvision.transforms import ColorJitter
+
         self.ColorJitter = ColorJitter(brightness, contrast, saturation, hue)
 
-    def __call__(self,sample):
-        return {"image":self.ColorJitter(sample["image"]),
-                "mask" :sample["mask"]}
-
+    def __call__(self, sample):
+        return {"image": self.ColorJitter(sample["image"]), "mask": sample["mask"]}
 
 
 # class RandomCrop(object):
@@ -148,15 +155,17 @@ class ColorJitter(object):
 #         sample['image'], sample['mask'] = img, mask
 #         return sample
 
+
 class ToTensor(object):
     """convert ndarrays in sample to Tensors"""
-    def __call__(self,sample):
-        from torchvision.transforms import ToTensor
-        ToTensor = ToTensor()
-        img , mask = sample['image'],sample['mask']
-        sample['image'],sample['mask'] = ToTensor(img) ,ToTensor(mask)
-        return sample
 
+    def __call__(self, sample):
+        from torchvision.transforms import ToTensor
+
+        ToTensor = ToTensor()
+        img, mask = sample["image"], sample["mask"]
+        sample["image"], sample["mask"] = ToTensor(img), ToTensor(mask)
+        return sample
 
 
 # class Rescale(object):
@@ -181,14 +190,18 @@ class RandomVerticalFlip(object):
     Args:
         p (float): probability of the image being flipped. Default value is 0.5
     """
-    def __init__(self, p =0.5):
+
+    def __init__(self, p=0.5):
         self.p = p
-    def __call__(self,sample):
+
+    def __call__(self, sample):
         from torchvision.transforms.functional import vflip as vertical_flip
-        img , mask = sample['image'],sample['mask']
+
+        img, mask = sample["image"], sample["mask"]
         if random.random() < self.p:
-                sample['image'], sample['mask'] = vertical_flip(img), vertical_flip(mask)
+            sample["image"], sample["mask"] = vertical_flip(img), vertical_flip(mask)
         return sample
+
 
 class RandomHorizontalFlip(object):
     """Horizontally flip the given PIL Image randomly with a given probability.
@@ -196,20 +209,26 @@ class RandomHorizontalFlip(object):
     Args:
         p (float): probability of the image being flipped. Default value is 0.5
     """
-    def __init__(self, p = 0.5):
+
+    def __init__(self, p=0.5):
         self.p = p
 
     def __call__(self, sample):
         from torchvision.transforms.functional import hflip as horizontal_flip
-        img , mask = sample['image'],sample['mask']
+
+        img, mask = sample["image"], sample["mask"]
         if random.random() < self.p:
-                sample['image'], sample['mask'] = horizontal_flip(img), horizontal_flip(mask)
+            sample["image"], sample["mask"] = horizontal_flip(img), horizontal_flip(
+                mask
+            )
         return sample
 
+
 class ToPILImage(object):
-    def __call__(self,sample):
+    def __call__(self, sample):
         from torchvision.transforms import ToPILImage
-        img , mask = sample['image'],sample['mask']
+
+        img, mask = sample["image"], sample["mask"]
         ToPILImage = ToPILImage()
-        sample['image'], sample['mask'] = ToPILImage(img),ToPILImage(mask)
+        sample["image"], sample["mask"] = ToPILImage(img), ToPILImage(mask)
         return sample
