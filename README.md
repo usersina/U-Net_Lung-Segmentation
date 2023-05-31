@@ -10,10 +10,36 @@ This Implementation Achived **97% accuracy** in Lung Segmentation with U-Net
 Download Dataset from [Chest Xray Masks and Labels Pulmonary Chest X-Ray Defect Detection](https://www.kaggle.com/nikhilpandey360/chest-xray-masks-and-labels)
 
 ```
-  /data
-    /data/Lung Segmentation
-      /data/Lung Segmentation/CXR_Png
-      /data/Lung Segmentation/masks
+data
+├── Lung Segmentation
+│   ├── CXR_png
+│   │   ├── CHNCXR_0001_0.png
+│   │   ├── ...
+│   │   └── MCUCXR_0399_1.png
+│   └── masks
+│       ├── CHNCXR_0001_0_mask.png
+│       ├── ...
+│       └── MCUCXR_0399_1.png
+└── README.md
+```
+
+## Usage
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+python main.py
+```
+
+In case you get the following error
+
+> torch.cuda.OutOfMemoryError: CUDA out of memory.
+
+You need to run the script with a lower image size
+
+```bash
+python main.py --img_size 400
 ```
 
 ## U-Net: Convolutional Networks for Biomedical Image Segmentation
