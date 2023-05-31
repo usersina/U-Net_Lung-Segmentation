@@ -10,6 +10,8 @@ from torch import optim
 from LungSegmentationDataset import LungSegDataset
 from model.unet import UNet
 
+INITIAL_BEST_ACC = 0.98
+
 
 def train_and_validate(
     net, criterion, optimizer, scheduler, dataloader, device, epochs, load_model=None
@@ -29,7 +31,7 @@ def train_and_validate(
         "val": {"epoch": [], "loss": [], "acc": []},
     }
 
-    best_acc = 0.98
+    best_acc = INITIAL_BEST_ACC
     best_loss = 10000000000
     start = time.time()
     for epoch in range(epochs):
@@ -103,6 +105,7 @@ def train_and_validate(
                         "model_state_dict": best_model_wts,
                         "optimizer_state_dict": optimizer.state_dict(),
                         "best_acc": best_acc,
+                        "loss": loss,
                     },
                     os.path.join(
                         os.getcwd(),
